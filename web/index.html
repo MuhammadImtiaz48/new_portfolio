@@ -31,8 +31,272 @@
 
   <title>portfolio</title>
   <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #0d0f0d;
+      --green-dark: #0f4d3a;
+      --green-primary: #1db87c;
+      --green-bright: #2ee6a6;
+      --text-primary: #f2f2f2;
+      --text-secondary: #9a9a9a;
+      --border-light: rgba(255, 255, 255, 0.08);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: var(--bg-primary);
+    }
+
+    #app-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-primary);
+      background-image:
+        radial-gradient(rgba(46, 230, 166, 0.10) 1px, transparent 1px);
+      background-size: 26px 26px;
+      background-position: center;
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #app-loader.loader-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-ambient-glow {
+      position: absolute;
+      width: 620px;
+      height: 620px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(29, 184, 124, 0.16) 0%, rgba(29, 184, 124, 0) 70%);
+      animation: ambientPulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes ambientPulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    .loader-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .loader-scanline {
+      position: absolute;
+      top: -18px;
+      left: -12%;
+      width: 124%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      box-shadow: 0 0 12px 2px rgba(46, 230, 166, 0.6);
+      animation: scan 2.2s ease-in-out infinite;
+      opacity: 0.9;
+    }
+
+    @keyframes scan {
+      0% { top: -10px; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { top: 168px; opacity: 0; }
+    }
+
+    .loader-percent {
+      display: flex;
+      align-items: flex-start;
+      line-height: 1;
+    }
+
+    .loader-percent-value {
+      font-size: 128px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -4px;
+      text-shadow: 0 0 30px rgba(46, 230, 166, 0.35);
+      min-width: 190px;
+      text-align: right;
+      transition: text-shadow 0.3s ease;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .loader-percent-sign {
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--green-primary);
+      margin-left: 6px;
+      margin-top: 8px;
+      opacity: 0.85;
+    }
+
+    .loader-bar-track {
+      position: relative;
+      width: 300px;
+      height: 3px;
+      margin-top: 34px;
+      background-color: var(--border-light);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loader-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--green-dark), var(--green-bright));
+      box-shadow: 0 0 10px 1px rgba(46, 230, 166, 0.55);
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .loader-bar-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 40px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55));
+      animation: shimmer 1.4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.8; }
+    }
+
+    .loader-status {
+      margin-top: 22px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      min-height: 16px;
+    }
+
+    .loader-status-cursor {
+      display: inline-block;
+      width: 7px;
+      margin-left: 2px;
+      color: var(--green-bright);
+      animation: blink 0.9s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .loader-percent-value { font-size: 84px; min-width: 130px; letter-spacing: -2px; }
+      .loader-percent-sign { font-size: 20px; }
+      .loader-bar-track { width: 210px; }
+      .loader-status { font-size: 10px; letter-spacing: 2px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .loader-ambient-glow, .loader-scanline, .loader-bar-fill::after {
+        animation: none;
+      }
+    }
+  </style>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+
+<div id="app-loader">
+  <div class="loader-ambient-glow"></div>
+  <div class="loader-content">
+    <div class="loader-scanline"></div>
+    <div class="loader-percent">
+      <span class="loader-percent-value" id="loader-percent-value">0</span>
+      <span class="loader-percent-sign">%</span>
+    </div>
+    <div class="loader-bar-track">
+      <div class="loader-bar-fill" id="loader-bar-fill"></div>
+    </div>
+    <div class="loader-status" id="loader-status">Initializing<span class="loader-status-cursor">_</span></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var percentEl = document.getElementById('loader-percent-value');
+    var barEl = document.getElementById('loader-bar-fill');
+    var statusEl = document.getElementById('loader-status');
+    var loaderEl = document.getElementById('app-loader');
+
+    var messages = [
+      'Initializing',
+      'Loading assets',
+      'Compiling widgets',
+      'Bootstrapping engine',
+      'Almost there'
+    ];
+
+    var currentPercent = 0;
+    var messageIndex = 0;
+    var finished = false;
+
+    function setPercent(value) {
+      currentPercent = Math.min(value, 100);
+      percentEl.textContent = Math.floor(currentPercent);
+      barEl.style.width = currentPercent + '%';
+    }
+
+    function cycleMessage() {
+      if (finished) return;
+      statusEl.innerHTML = messages[messageIndex] + '<span class="loader-status-cursor">_</span>';
+      messageIndex = (messageIndex + 1) % messages.length;
+    }
+
+    cycleMessage();
+    var messageTimer = setInterval(cycleMessage, 1000);
+
+    var progressTimer = setInterval(function () {
+      if (finished) return;
+      var increment = currentPercent < 60 ? (Math.random() * 6 + 2) : (Math.random() * 2 + 0.5);
+      setPercent(Math.min(currentPercent + increment, 90));
+    }, 260);
+
+    function finishLoading() {
+      if (finished) return;
+      finished = true;
+      clearInterval(progressTimer);
+      clearInterval(messageTimer);
+      setPercent(100);
+      statusEl.innerHTML = 'Ready<span class="loader-status-cursor">_</span>';
+      setTimeout(function () {
+        loaderEl.classList.add('loader-hidden');
+      }, 500);
+    }
+
+    window.addEventListener('flutter-first-frame', finishLoading);
+
+    setTimeout(finishLoading, 7000);
+  })();
+</script>
+
+<script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
