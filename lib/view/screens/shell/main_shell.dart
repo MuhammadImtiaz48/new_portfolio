@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 import 'package:get/get.dart';
 import 'package:portfolio/constants/colors.dart';
 import 'package:portfolio/controllers/responsive_controller.dart';
@@ -27,14 +28,26 @@ class MainShell extends StatelessWidget {
         });
 
         return Obx(() {
-          final content = IndexedStack(
-            index: sidebarController.activeIndex.value,
-            children: const [
-              HomeScreen(),
-              AboutScreen(),
-              ProjectsScreen(),
-              ContactScreen(),
-            ],
+          final content = PageTransitionSwitcher(
+            duration: const Duration(milliseconds: 400),
+            transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
+              return FadeThroughTransition(
+                animation: primaryAnimation,
+                secondaryAnimation: secondaryAnimation,
+                fillColor: Colors.transparent,
+                child: child,
+              );
+            },
+            child: IndexedStack(
+              key: ValueKey(sidebarController.activeIndex.value),
+              index: sidebarController.activeIndex.value,
+              children: const [
+                HomeScreen(),
+                AboutScreen(),
+                ProjectsScreen(),
+                ContactScreen(),
+              ],
+            ),
           );
 
           if (responsive.isMobile) {

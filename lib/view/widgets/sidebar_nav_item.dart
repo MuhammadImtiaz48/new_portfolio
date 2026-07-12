@@ -30,37 +30,41 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.active
+    final isActive = widget.active;
+    final isHovered = _hovered;
+
+    final Color labelColor = isActive
         ? WebColors.textPrimary
-        : (_hovered ? WebColors.textPrimary : WebColors.textSecondary);
-    
+        : (isHovered ? WebColors.textPrimary : WebColors.textSecondary);
+
+    final Color numberColor = isActive
+        ? WebColors.greenPrimary
+        : (isHovered ? WebColors.textSecondary : WebColors.textMuted);
+
     final numberString = '0${widget.index + 1}';
 
-    final content = AnimatedScale(
-      scale: _hovered ? 1.05 : 1.0,
-      duration: const Duration(milliseconds: 180),
-      curve: Curves.easeOut,
-      child: Row(
-        mainAxisAlignment:
-        widget.collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
-        children: [
-          CustomText(
-            text: numberString,
-            fontSize: 13.fSize,
-            fontWeight: FontWeight.w600,
-            color: widget.active ? WebColors.textPrimary : WebColors.textMuted,
-          ),
-          if (!widget.collapsed) ...[
-            SizedBox(width: 16.h),
-            CustomText(
+    final content = Row(
+      mainAxisAlignment:
+          widget.collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
+      children: [
+        CustomText(
+          text: numberString,
+          fontSize: 13.fSize,
+          fontWeight: FontWeight.w600,
+          color: numberColor,
+        ),
+        if (!widget.collapsed) ...[
+          SizedBox(width: 16.h),
+          Flexible(
+            child: CustomText(
               text: widget.data.label,
               fontSize: 16.fSize,
-              fontWeight: widget.active ? FontWeight.w600 : FontWeight.w500,
-              color: color,
+              fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+              color: labelColor,
             ),
-          ],
+          ),
         ],
-      ),
+      ],
     );
 
     return MouseRegion(
@@ -71,13 +75,24 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 56.v,
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+          height: 50.v,
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(horizontal: widget.collapsed ? 0 : 20.h),
           decoration: BoxDecoration(
-            color: widget.active ? WebColors.bgCardHover : Colors.transparent,
+            color: isActive
+                ? WebColors.greenPrimary.withValues(alpha: 0.12)
+                : (isHovered
+                    ? WebColors.textPrimary.withValues(alpha: 0.04)
+                    : Colors.transparent),
             borderRadius: BorderRadius.circular(12.adaptSize),
+            border: Border.all(
+              color: isActive
+                  ? WebColors.greenPrimary.withValues(alpha: 0.25)
+                  : Colors.transparent,
+              width: 1,
+            ),
           ),
           child: widget.collapsed
               ? Tooltip(message: widget.data.label, child: content)

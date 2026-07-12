@@ -14,48 +14,73 @@ class SidebarRail extends StatelessWidget {
 
   const SidebarRail({super.key, required this.collapsed});
 
-  static const double _itemSpacing = 8;
+  static const double _itemSpacing = 4;
+
+  Future<void> _launchEmail() async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'shahroozshafique6@gmail.com',
+    );
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<SidebarController>();
-    final width = collapsed ? 84.h : 280.h;
+    final width = collapsed ? 84.h : 220.h;
 
     return Container(
       width: width,
       height: double.infinity,
-      color: WebColors.bgSecondary,
+      decoration: BoxDecoration(
+        color: WebColors.bgSecondary,
+        border: Border(
+          right: BorderSide(color: WebColors.borderLight, width: 1),
+        ),
+      ),
       child: Column(
-        crossAxisAlignment: collapsed ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            collapsed ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 64.v),
+          SizedBox(height: 40.v),
+
+          // ── Logo / Brand ──────────────────────────────────────────
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: collapsed ? 0 : 32.h),
-            child: collapsed 
-              ? Text('S.', style: AppTextStyles.heading(fontSize: 24))
-              : RichText(
-                  text: TextSpan(
-                    style: AppTextStyles.heading(fontSize: 32),
-                    children: [
-                      const TextSpan(text: 'Shahrooz'),
-                      TextSpan(
-                        text: '.',
-                        style: TextStyle(color: WebColors.greenPrimary),
-                      ),
-                    ],
+            padding:
+                EdgeInsets.symmetric(horizontal: collapsed ? 0 : 24.h),
+            child: collapsed
+                ? Text('S.', style: AppTextStyles.heading(fontSize: 22))
+                : RichText(
+                    text: TextSpan(
+                      style: AppTextStyles.heading(fontSize: 26),
+                      children: [
+                        const TextSpan(text: 'Shahrooz'),
+                        TextSpan(
+                          text: '.',
+                          style:
+                              TextStyle(color: WebColors.greenPrimary),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
           ),
-          SizedBox(height: 64.v),
+
+          SizedBox(height: 48.v),
+
+          // ── Nav Items ─────────────────────────────────────────────
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: collapsed ? 12.h : 16.h),
+              padding: EdgeInsets.symmetric(
+                  horizontal: collapsed ? 10.h : 12.h),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: List.generate(controller.items.length, (index) {
                   return Padding(
                     padding: EdgeInsets.only(bottom: _itemSpacing.v),
                     child: Obx(
-                          () => SidebarNavItem(
+                      () => SidebarNavItem(
                         data: controller.items[index],
                         index: index,
                         collapsed: collapsed,
@@ -68,40 +93,78 @@ class SidebarRail extends StatelessWidget {
               ),
             ),
           ),
+
+          // ── Bottom Section (expanded sidebar) ─────────────────────
           if (!collapsed)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.h),
+              padding: EdgeInsets.fromLTRB(20.h, 0, 20.h, 28.v),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Divider(color: WebColors.borderLight, height: 1),
-                  SizedBox(height: 24.v),
-                  Text(
-                    'shahroozshafique6\n@gmail.com',
-                    style: AppTextStyles.body(fontSize: 13, color: WebColors.textMuted),
-                  ),
-                  SizedBox(height: 24.v),
+                  SizedBox(height: 20.v),
+
+                  // Clickable email
+                  _EmailButton(onTap: _launchEmail),
+
+                  SizedBox(height: 18.v),
+
+                  // Social icons — perfectly centered row
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _buildSocialIcon(FontAwesomeIcons.github, 'https://github.com/Shahrooz791'),
-                      SizedBox(width: 12.h),
-                      _buildSocialIcon(FontAwesomeIcons.linkedinIn, 'https://www.linkedin.com/in/shahroozshafique791'),
-                      SizedBox(width: 12.h),
-                      _buildSocialIcon(FontAwesomeIcons.instagram, 'https://www.instagram.com/shahroozshafique6/'),
+                      _SocialIconWidget(
+                        icon: FontAwesomeIcons.github,
+                        url: 'https://github.com/Shahrooz791',
+                      ),
+                      SizedBox(width: 10.h),
+                      _SocialIconWidget(
+                        icon: FontAwesomeIcons.linkedinIn,
+                        url: 'https://www.linkedin.com/in/shahroozshafique791',
+                      ),
+                      SizedBox(width: 10.h),
+                      _SocialIconWidget(
+                        icon: FontAwesomeIcons.instagram,
+                        url: 'https://www.instagram.com/shahroozshafique6/',
+                      ),
                     ],
                   ),
-                  SizedBox(height: 32.v),
                 ],
               ),
             ),
+
+          // ── Bottom Section (collapsed sidebar) ───────────────────
           if (collapsed)
             Padding(
-              padding: EdgeInsets.only(bottom: 32.v),
+              padding: EdgeInsets.only(bottom: 28.v),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildSocialIcon(FontAwesomeIcons.github, 'https://github.com/Shahrooz791', small: true),
-                  SizedBox(height: 12.v),
-                  _buildSocialIcon(FontAwesomeIcons.linkedinIn, 'https://www.linkedin.com/in/shahroozshafique791', small: true),
+                  Divider(
+                    color: WebColors.borderLight,
+                    height: 1,
+                    indent: 12.h,
+                    endIndent: 12.h,
+                  ),
+                  SizedBox(height: 16.v),
+                  _SocialIconWidget(
+                    icon: FontAwesomeIcons.github,
+                    url: 'https://github.com/Shahrooz791',
+                    small: true,
+                  ),
+                  SizedBox(height: 10.v),
+                  _SocialIconWidget(
+                    icon: FontAwesomeIcons.linkedinIn,
+                    url: 'https://www.linkedin.com/in/shahroozshafique791',
+                    small: true,
+                  ),
+                  SizedBox(height: 10.v),
+                  _SocialIconWidget(
+                    icon: FontAwesomeIcons.instagram,
+                    url: 'https://www.instagram.com/shahroozshafique6/',
+                    small: true,
+                  ),
                 ],
               ),
             ),
@@ -112,18 +175,63 @@ class SidebarRail extends StatelessWidget {
         .fadeIn(duration: 400.ms)
         .slideX(begin: -0.2, end: 0, duration: 400.ms, curve: Curves.easeOut);
   }
+}
 
-  Widget _buildSocialIcon(dynamic icon, String url, {bool small = false}) {
-    return _SocialIconWidget(icon: icon, url: url, small: small);
+// ─────────────────────────────────────────────────────────────────────────────
+// Clickable email button
+// ─────────────────────────────────────────────────────────────────────────────
+class _EmailButton extends StatefulWidget {
+  final VoidCallback onTap;
+  const _EmailButton({required this.onTap});
+
+  @override
+  State<_EmailButton> createState() => _EmailButtonState();
+}
+
+class _EmailButtonState extends State<_EmailButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
+          style: TextStyle(
+            fontFamily: 'SpaceGrotesk',
+            fontSize: 12.fSize,
+            fontWeight: FontWeight.w500,
+            color: _hovered ? WebColors.greenPrimary : WebColors.textMuted,
+            decoration: _hovered
+                ? TextDecoration.underline
+                : TextDecoration.none,
+            decorationColor: WebColors.greenPrimary,
+            height: 1.5,
+          ),
+          child: const Text('shahroozshafique6\n@gmail.com'),
+        ),
+      ),
+    );
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Social icon button
+// ─────────────────────────────────────────────────────────────────────────────
 class _SocialIconWidget extends StatefulWidget {
   final dynamic icon;
   final String url;
   final bool small;
 
-  const _SocialIconWidget({required this.icon, required this.url, this.small = false});
+  const _SocialIconWidget({
+    required this.icon,
+    required this.url,
+    this.small = false,
+  });
 
   @override
   State<_SocialIconWidget> createState() => _SocialIconWidgetState();
@@ -134,6 +242,9 @@ class _SocialIconWidgetState extends State<_SocialIconWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final size = widget.small ? 34.adaptSize : 38.adaptSize;
+    final iconSize = widget.small ? 15.adaptSize : 16.adaptSize;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovered = true),
@@ -142,19 +253,27 @@ class _SocialIconWidgetState extends State<_SocialIconWidget> {
         onTap: () => launchUrl(Uri.parse(widget.url)),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          width: widget.small ? 36.adaptSize : 40.adaptSize,
-          height: widget.small ? 36.adaptSize : 40.adaptSize,
+          curve: Curves.easeOutCubic,
+          width: size,
+          height: size,
           decoration: BoxDecoration(
-            color: _isHovered ? WebColors.bgCardHover : Colors.transparent,
-            borderRadius: BorderRadius.circular(12.adaptSize),
+            color: _isHovered
+                ? WebColors.greenPrimary.withValues(alpha: 0.1)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(10.adaptSize),
             border: Border.all(
-              color: _isHovered ? WebColors.borderGreen : WebColors.borderLight,
+              color: _isHovered
+                  ? WebColors.greenPrimary.withValues(alpha: 0.4)
+                  : WebColors.borderLight,
+              width: 1,
             ),
           ),
-          child: FaIcon(
-            widget.icon,
-            size: widget.small ? 16.adaptSize : 18.adaptSize,
-            color: _isHovered ? WebColors.greenPrimary : WebColors.textMuted,
+          child: Center(
+            child: FaIcon(
+              widget.icon,
+              size: iconSize,
+              color: _isHovered ? WebColors.greenPrimary : WebColors.textMuted,
+            ),
           ),
         ),
       ),

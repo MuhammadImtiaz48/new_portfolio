@@ -48,15 +48,15 @@ class AboutScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Expanded(
-                  flex: 6,
-                  child: AboutHeroSection(),
-                ),
-                SizedBox(width: 64.h),
-                const Expanded(
                   flex: 4,
                   child: Center(
                     child: ProfileImageFrame(),
                   ),
+                ),
+                SizedBox(width: 64.h),
+                const Expanded(
+                  flex: 6,
+                  child: AboutHeroSection(),
                 ),
               ],
             );

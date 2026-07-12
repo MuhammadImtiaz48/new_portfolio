@@ -8,9 +8,9 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     stats.assignAll(const [
-      StatItemModel(label: 'Location', value: 'Austin, TX'),
-      StatItemModel(label: 'Experience', value: '5+ Years'),
-      StatItemModel(label: 'Projects', value: '24+'),
+      StatItemModel(label: 'Location', value: 'Lahore, PK'),
+      StatItemModel(label: 'Experience', value: '2+ Years'),
+      StatItemModel(label: 'Projects', value: '5+'),
       StatItemModel(label: 'Availability', value: 'Open'),
     ]);
   }

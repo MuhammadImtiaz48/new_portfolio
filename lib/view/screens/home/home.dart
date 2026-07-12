@@ -11,14 +11,28 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final responsive = Get.find<ResponsiveController>();
 
-    return Obx(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Obx(
           () => SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: responsive.isMobile ? 20.h : (responsive.isTablet ? 40.h : 64.h),
-          vertical: 48.v,
-        ),
-        child: const HomeHeroSection(),
-      ),
+            physics: const BouncingScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: responsive.isMobile ? 20.h : (responsive.isTablet ? 40.h : 64.h),
+                    vertical: 48.v,
+                  ),
+                  child: const HomeHeroSection(),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
