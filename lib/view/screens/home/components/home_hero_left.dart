@@ -10,6 +10,7 @@ import 'package:portfolio/view/screens/home/components/home_stats_row.dart';
 import 'package:portfolio/view/widgets/custom_text.dart';
 import 'package:portfolio/view/widgets/outlined_glow_button.dart';
 import 'package:portfolio/view/widgets/primary_button.dart';
+import 'package:portfolio/core/utils/download_helper.dart';
 
 class HomeHeroLeft extends StatelessWidget {
   const HomeHeroLeft({super.key});
@@ -78,6 +79,11 @@ class HomeHeroLeft extends StatelessWidget {
               OutlinedGlowButton(
                 label: 'Contact Me',
                 onTap: () => Get.find<SidebarController>().setActive(3),
+              ),
+              OutlinedGlowButton(
+                label: 'Resume',
+                onTap: () => downloadFile(
+                    'assets/resume/shahrooz_resume.pdf', 'shahrooz_resume.pdf'),
               ),
             ],
           ).animate().fadeIn(delay: 300.ms, duration: 400.ms).slideY(begin: 0.3, end: 0),
