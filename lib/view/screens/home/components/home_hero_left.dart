@@ -83,7 +83,7 @@ class HomeHeroLeft extends StatelessWidget {
               OutlinedGlowButton(
                 label: 'Resume',
                 onTap: () => downloadFile(
-                    'assets/resume/shahrooz_resume.pdf', 'shahrooz_resume.pdf'),
+                    'assets/assets/resume/shahrooz_resume.pdf', 'shahrooz_resume.pdf'),
               ),
             ],
           ).animate().fadeIn(delay: 300.ms, duration: 400.ms).slideY(begin: 0.3, end: 0),
