@@ -36,17 +36,13 @@ class ProjectsGrid extends StatelessWidget {
                   onPageChanged: controller.setPage,
                   itemCount: controller.totalPages,
                   itemBuilder: (context, pageIndex) {
-                    final startIndex = pageIndex * 4;
-                    final itemsInPage = controller.projects.skip(startIndex).take(4).toList();
+                    final startIndex = pageIndex * 3;
+                    final itemsInPage = controller.projects.skip(startIndex).take(3).toList();
 
-                    const crossAxisCount = 2;
+                    const crossAxisCount = 3;
                     final crossAxisSpacing = 24.h;
                     final mainAxisSpacing = 24.v;
-                    // Always size cells against the standard 2-row (4 item)
-                    // page layout so cards keep a consistent size and don't
-                    // stretch to fill the whole area on pages with fewer
-                    // than 4 projects (last page, or few total projects).
-                    const rows = 2;
+                    const rows = 1;
 
                     return LayoutBuilder(
                       builder: (context, constraints) {

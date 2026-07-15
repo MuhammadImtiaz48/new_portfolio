@@ -82,7 +82,7 @@ class _ProjectCardState extends State<ProjectCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 5,
+                flex: 6,
                 child: Hero(
                   tag: 'project_image_${widget.project.id}',
                   child: Stack(
@@ -147,9 +147,9 @@ class _ProjectCardState extends State<ProjectCard> {
                 ),
               ),
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.adaptSize, vertical: 10.adaptSize),
+                  padding: EdgeInsets.symmetric(horizontal: 16.adaptSize, vertical: 16.adaptSize),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
@@ -181,7 +181,7 @@ class _ProjectCardState extends State<ProjectCard> {
                         child: Text(
                           widget.project.shortDescription,
                           style: AppTextStyles.body(fontSize: 13),
-                          maxLines: 2,
+                          maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

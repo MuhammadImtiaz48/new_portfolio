@@ -32,7 +32,7 @@ class ProjectsController extends GetxController {
     }
   }
 
-  int get totalPages => projects.isEmpty ? 1 : (projects.length / 4).ceil();
+  int get totalPages => projects.isEmpty ? 1 : (projects.length / 3).ceil();
 
   void nextPage() {
     if (currentPage.value < totalPages - 1) {
