@@ -1,5 +1,16 @@
 {
   "projects": {
-    "default": "portfolio-5a8af"
-  }
+    "default": "portfolio-5a8af",
+    "build/web": "portfolio-5a8af"
+  },
+  "targets": {
+    "portfolio-5a8af": {
+      "hosting": {
+        "portfolio": [
+          "shahrooz-portfolio"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
