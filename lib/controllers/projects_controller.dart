@@ -4,19 +4,26 @@ import 'package:portfolio/models/project_model.dart';
 import 'package:portfolio/services/project_service.dart';
 
 class ProjectsController extends GetxController {
+  final ProjectService _projectService = Get.put(
+    ProjectService(),
+    permanent: true,
+  );
+
   final PageController pageController = PageController();
   final RxInt currentPage = 0.obs;
-  
+
   final RxList<ProjectModel> projects = <ProjectModel>[].obs;
-  
-  final ProjectService _projectService = ProjectService();
-  final RxBool isLoading = true.obs;
+  final RxBool isLoading = false.obs;
   final RxBool isError = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchProjects();
+    // 1. Instantly seed with curated defaults so page never gets stuck on spinner
+    projects.assignAll(_projectService.getDefaultProjects());
+
+    // 2. Real-time stream from Firestore (auto-syncs with Admin Panel)
+    projects.bindStream(_projectService.streamProjects());
   }
 
   Future<void> fetchProjects() async {
@@ -51,7 +58,7 @@ class ProjectsController extends GetxController {
       );
     }
   }
-  
+
   void setPage(int page) {
     currentPage.value = page;
   }

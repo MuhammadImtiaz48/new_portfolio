@@ -39,24 +39,47 @@ class ProjectModel {
   });
 
   factory ProjectModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final rawData = doc.data();
+    final data = (rawData is Map<String, dynamic>) ? rawData : <String, dynamic>{};
+
+    int parseSortOrder(dynamic val) {
+      if (val is int) return val;
+      if (val is num) return val.toInt();
+      if (val is String) return int.tryParse(val) ?? 0;
+      return 0;
+    }
+
+    DateTime? parseDateTime(dynamic val) {
+      if (val is Timestamp) return val.toDate();
+      if (val is DateTime) return val;
+      if (val is String) return DateTime.tryParse(val);
+      return null;
+    }
+
+    List<String> parseStringList(dynamic val) {
+      if (val is List) {
+        return val.map((e) => e?.toString() ?? '').where((e) => e.isNotEmpty).toList();
+      }
+      return [];
+    }
+
     return ProjectModel(
       id: doc.id,
-      title: data[DbCollections.projectTitle] ?? '',
-      category: data[DbCollections.projectCategory] ?? '',
-      shortDescription: data[DbCollections.projectShortDescription] ?? '',
-      fullDescription: data[DbCollections.projectFullDescription] ?? '',
-      mediaUrls: List<String>.from(data[DbCollections.projectMediaUrls] ?? []),
-      techStack: List<String>.from(data[DbCollections.projectTechStack] ?? []),
-      features: data.containsKey('features') ? List<String>.from(data['features']) : [],
-      playStoreUrl: data[DbCollections.projectPlayStoreUrl],
-      appStoreUrl: data[DbCollections.projectAppStoreUrl],
-      githubUrl: data[DbCollections.projectGithubUrl],
-      liveDemoUrl: data[DbCollections.projectLiveDemoUrl],
-      status: data[DbCollections.projectStatus] ?? '',
-      featured: data[DbCollections.projectFeatured] ?? false,
-      sortOrder: data[DbCollections.projectSortOrder] ?? 0,
-      createdAt: (data[DbCollections.projectCreatedAt] as Timestamp?)?.toDate(),
+      title: data[DbCollections.projectTitle]?.toString() ?? '',
+      category: data[DbCollections.projectCategory]?.toString() ?? '',
+      shortDescription: data[DbCollections.projectShortDescription]?.toString() ?? '',
+      fullDescription: data[DbCollections.projectFullDescription]?.toString() ?? '',
+      mediaUrls: parseStringList(data[DbCollections.projectMediaUrls]),
+      techStack: parseStringList(data[DbCollections.projectTechStack]),
+      features: parseStringList(data['features'] ?? data['featureList']),
+      playStoreUrl: data[DbCollections.projectPlayStoreUrl]?.toString(),
+      appStoreUrl: data[DbCollections.projectAppStoreUrl]?.toString(),
+      githubUrl: data[DbCollections.projectGithubUrl]?.toString(),
+      liveDemoUrl: data[DbCollections.projectLiveDemoUrl]?.toString(),
+      status: data[DbCollections.projectStatus]?.toString() ?? '',
+      featured: data[DbCollections.projectFeatured] == true || data[DbCollections.projectFeatured]?.toString() == 'true',
+      sortOrder: parseSortOrder(data[DbCollections.projectSortOrder]),
+      createdAt: parseDateTime(data[DbCollections.projectCreatedAt]),
     );
   }
 }

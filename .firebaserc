@@ -1,7 +1,6 @@
 {
   "projects": {
-    "default": "portfolio-5a8af",
-    "build/web": "portfolio-5a8af"
+    "default": "profilo-2f157"
   },
   "targets": {
     "portfolio-5a8af": {

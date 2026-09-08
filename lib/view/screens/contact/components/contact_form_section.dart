@@ -37,12 +37,19 @@ class ContactFormSection extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(32.adaptSize),
           decoration: BoxDecoration(
-            color: WebColors.bgCard.withValues(alpha: 0.8),
+            gradient: WebColors.cardSurfaceGradient,
             borderRadius: BorderRadius.circular(24.adaptSize),
             border: Border.all(
               color: WebColors.borderLight,
-              width: 1,
+              width: 1.2,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.35),
+                blurRadius: 24,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
           child: Form(
             key: controller.formKey,
@@ -52,11 +59,11 @@ class ContactFormSection extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     style: AppTextStyles.heading(fontSize: 24),
-                    children: [
-                      const TextSpan(text: 'Send a '),
+                    children: const [
+                      TextSpan(text: 'Send a '),
                       TextSpan(
                         text: 'Message',
-                        style: TextStyle(color: WebColors.greenPrimary),
+                        style: TextStyle(color: WebColors.greenBright),
                       ),
                     ],
                   ),

@@ -38,7 +38,7 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
         : (isHovered ? WebColors.textPrimary : WebColors.textSecondary);
 
     final Color numberColor = isActive
-        ? WebColors.greenPrimary
+        ? WebColors.greenBright
         : (isHovered ? WebColors.textSecondary : WebColors.textMuted);
 
     final numberString = '0${widget.index + 1}';
@@ -50,7 +50,7 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
         CustomText(
           text: numberString,
           fontSize: 13.fSize,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: numberColor,
         ),
         if (!widget.collapsed) ...[
@@ -58,8 +58,8 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
           Flexible(
             child: CustomText(
               text: widget.data.label,
-              fontSize: 16.fSize,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+              fontSize: 15.fSize,
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
               color: labelColor,
             ),
           ),
@@ -77,22 +77,31 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 220),
           curve: Curves.easeOutCubic,
-          height: 50.v,
+          height: 48.v,
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(horizontal: widget.collapsed ? 0 : 20.h),
           decoration: BoxDecoration(
             color: isActive
-                ? WebColors.greenPrimary.withValues(alpha: 0.12)
+                ? WebColors.greenPrimary.withValues(alpha: 0.14)
                 : (isHovered
-                    ? WebColors.textPrimary.withValues(alpha: 0.04)
+                    ? WebColors.textPrimary.withValues(alpha: 0.05)
                     : Colors.transparent),
             borderRadius: BorderRadius.circular(12.adaptSize),
             border: Border.all(
               color: isActive
-                  ? WebColors.greenPrimary.withValues(alpha: 0.25)
+                  ? WebColors.greenPrimary.withValues(alpha: 0.45)
                   : Colors.transparent,
               width: 1,
             ),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: WebColors.greenGlow.withValues(alpha: 0.15),
+                      blurRadius: 16,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [],
           ),
           child: widget.collapsed
               ? Tooltip(message: widget.data.label, child: content)

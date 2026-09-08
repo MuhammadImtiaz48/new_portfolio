@@ -1,8 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void downloadFile(String url, String fileName) async {
-  final uri = Uri.parse(url);
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri);
+void downloadFile(String path, String fileName) async {
+  try {
+    final uri = Uri.parse(path);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  } catch (e) {
+    debugPrint('Error launching url: $e');
   }
 }

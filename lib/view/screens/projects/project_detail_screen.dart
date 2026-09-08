@@ -70,14 +70,39 @@ class ProjectDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      proj.category.toUpperCase(),
-                      style: AppTextStyles.eyebrow(),
+                    Row(
+                      children: [
+                        Text(
+                          proj.category.toUpperCase(),
+                          style: AppTextStyles.eyebrow(),
+                        ),
+                        if (proj.status.isNotEmpty &&
+                            proj.status.trim().toLowerCase() != 'live') ...[
+                          SizedBox(width: 12.h),
+                          _buildStatusBadge(proj.status),
+                        ],
+                      ],
                     ).animate().fade(duration: 400.ms).slideY(begin: 0.2, end: 0),
                     SizedBox(height: 8.v),
-                    Text(
-                      proj.title,
-                      style: AppTextStyles.heading(fontSize: 48),
+                    RichText(
+                      text: TextSpan(
+                        style: AppTextStyles.heading(fontSize: 46),
+                        children: [
+                          TextSpan(text: proj.title),
+                          const TextSpan(
+                            text: '.',
+                            style: TextStyle(
+                              color: WebColors.greenBright,
+                              shadows: [
+                                Shadow(
+                                  color: WebColors.greenGlow,
+                                  blurRadius: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ).animate().fade(duration: 400.ms, delay: 100.ms).slideY(begin: 0.2, end: 0),
                     SizedBox(height: 32.v),
 
@@ -195,6 +220,67 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildStatusBadge(String status) {
+    Color badgeColor;
+    String label;
+
+    switch (status.trim().toLowerCase()) {
+      case 'staging':
+      case 'coming soon':
+        badgeColor = const Color(0xFFF59E0B);
+        label = 'Coming Soon';
+        break;
+      case 'maintenance':
+      case 'under maintenance':
+        badgeColor = const Color(0xFFEF4444);
+        label = 'Under Maintenance';
+        break;
+      case 'completed':
+        badgeColor = WebColors.greenBright;
+        label = 'Completed';
+        break;
+      default:
+        badgeColor = const Color(0xFF8B5CF6);
+        label = status;
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 4.v),
+      decoration: BoxDecoration(
+        color: badgeColor.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(6.adaptSize),
+        border: Border.all(
+          color: badgeColor.withValues(alpha: 0.4),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6.adaptSize,
+            height: 6.adaptSize,
+            decoration: BoxDecoration(
+              color: badgeColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 6.h),
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontFamily: 'SpaceGrotesk',
+              fontSize: 11.fSize,
+              fontWeight: FontWeight.w600,
+              color: badgeColor,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

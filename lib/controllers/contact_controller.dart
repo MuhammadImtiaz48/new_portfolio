@@ -1,11 +1,18 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:portfolio/constants/db_collections.dart';
+import 'package:portfolio/models/site_profile_model.dart';
+import 'package:portfolio/services/site_profile_service.dart';
 
 class ContactController extends GetxController {
+  final SiteProfileService _profileService = Get.put(SiteProfileService(), permanent: true);
+
+  final Rx<SiteProfileModel> profile = SiteProfileModel.defaultProfile().obs;
+
   final formKey = GlobalKey<FormState>();
-  
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final subjectController = TextEditingController();
@@ -15,6 +22,29 @@ class ContactController extends GetxController {
   final isSuccess = false.obs;
   final isError = false.obs;
   final errorMessage = ''.obs;
+
+  StreamSubscription<SiteProfileModel>? _subscription;
+
+  @override
+  void onInit() {
+    super.onInit();
+    try {
+      _subscription = _profileService.streamProfile().listen(
+        (p) => profile.value = p,
+        onError: (e) => debugPrint('Contact profile stream error: $e'),
+      );
+    } catch (e) {
+      debugPrint('Error subscribing to contact profile: $e');
+    }
+  }
+
+  String get subtext => profile.value.contactSubtext;
+  String get availabilityStatus => profile.value.availabilityStatus;
+  String get email => profile.value.email;
+  String get phone => profile.value.phone;
+  String get whatsapp => profile.value.whatsapp;
+  String get githubUsername => profile.value.githubUsername;
+  String get githubUrl => profile.value.githubUrl;
 
   Future<void> submitForm() async {
     if (formKey.currentState?.validate() ?? false) {
@@ -38,7 +68,7 @@ class ContactController extends GetxController {
         });
 
         isSuccess.value = true;
-        
+
         // Clear the form on success
         nameController.clear();
         emailController.clear();
@@ -59,6 +89,7 @@ class ContactController extends GetxController {
 
   @override
   void onClose() {
+    _subscription?.cancel();
     nameController.dispose();
     emailController.dispose();
     subjectController.dispose();

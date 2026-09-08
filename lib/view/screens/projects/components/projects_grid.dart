@@ -13,7 +13,7 @@ class ProjectsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProjectsController());
+    final controller = Get.find<ProjectsController>();
 
     return Column(
       children: [
@@ -39,20 +39,17 @@ class ProjectsGrid extends StatelessWidget {
                     final startIndex = pageIndex * 3;
                     final itemsInPage = controller.projects.skip(startIndex).take(3).toList();
 
-                    const crossAxisCount = 3;
-                    final crossAxisSpacing = 24.h;
-                    final mainAxisSpacing = 24.v;
-                    const rows = 1;
-
                     return LayoutBuilder(
                       builder: (context, constraints) {
-                        // Calculate the exact cell width & height so the grid
-                        // always fills the available space perfectly with no
-                        // leftover gap and no overflow, regardless of the
-                        // actual screen/window aspect ratio.
+                        final crossAxisCount = constraints.maxWidth > 860 ? 3 : 2;
+                        final crossAxisSpacing = 20.h;
+                        final mainAxisSpacing = 20.v;
+                        const rows = 1;
+
                         final cellWidth = (constraints.maxWidth - (crossAxisSpacing * (crossAxisCount - 1))) / crossAxisCount;
                         final cellHeight = (constraints.maxHeight - (mainAxisSpacing * (rows - 1))) / rows;
-                        final aspectRatio = cellWidth / cellHeight;
+                        final calculatedRatio = cellWidth / cellHeight;
+                        final aspectRatio = calculatedRatio.clamp(0.60, 0.92);
 
                         return GridView.builder(
                           physics: const NeverScrollableScrollPhysics(),

@@ -68,4 +68,32 @@ class AppTextStyles {
       color: WebColors.textPrimary,
     );
   }
+
+  static TextStyle pill({
+    double fontSize = 12,
+    Color color = WebColors.greenBright,
+    FontWeight weight = FontWeight.w600,
+  }) {
+    return TextStyle(
+      fontFamily: 'SpaceGrotesk',
+      fontSize: fontSize.fSize,
+      fontWeight: weight,
+      color: color,
+      letterSpacing: 0.5,
+    );
+  }
+
+  static TextStyle caption({
+    double fontSize = 13,
+    Color color = WebColors.textMuted,
+    FontWeight weight = FontWeight.w400,
+  }) {
+    return TextStyle(
+      fontFamily: 'SpaceGrotesk',
+      fontSize: fontSize.fSize,
+      fontWeight: weight,
+      color: color,
+      height: 1.4,
+    );
+  }
 }

@@ -43,9 +43,22 @@ class ProjectsScreen extends StatelessWidget {
                 style: AppTextStyles.eyebrow(),
               ),
               SizedBox(height: 8.v),
+              RichText(
+                text: TextSpan(
+                  style: AppTextStyles.heading(fontSize: 48),
+                  children: const [
+                    TextSpan(text: 'Selected '),
+                    TextSpan(
+                      text: 'Projects.',
+                      style: TextStyle(color: WebColors.greenBright),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 8.v),
               Text(
-                'Projects.',
-                style: AppTextStyles.heading(fontSize: 48),
+                'Production-grade mobile applications shipped with Flutter, Firebase, and payment integrations.',
+                style: AppTextStyles.body(fontSize: 15, color: WebColors.textSecondary),
               ),
               SizedBox(height: 24.v),
               Expanded(
@@ -53,13 +66,13 @@ class ProjectsScreen extends StatelessWidget {
                   final isMobile = Get.find<ResponsiveController>().isMobile;
                   final controller = Get.find<ProjectsController>();
 
-                  if (controller.isLoading.value) {
+                  if (controller.isLoading.value && controller.projects.isEmpty) {
                     return const Center(
                       child: CircularProgressIndicator(color: WebColors.greenPrimary),
                     );
                   }
 
-                  if (controller.isError.value) {
+                  if (controller.isError.value && controller.projects.isEmpty) {
                     return Center(
                       child: Text(
                         'Failed to load projects. Please try again later.',
@@ -79,11 +92,12 @@ class ProjectsScreen extends StatelessWidget {
 
                   if (isMobile) {
                     return ListView.separated(
+                      physics: const BouncingScrollPhysics(),
                       itemCount: controller.projects.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 32.v),
+                      separatorBuilder: (context, index) => SizedBox(height: 28.v),
                       itemBuilder: (context, index) {
                         return SizedBox(
-                          height: 400.v, // Fixed height for mobile cards
+                          height: 480.adaptSize, // Generous height for mobile cards
                           child: ProjectCard(
                             project: controller.projects[index],
                             index: index,

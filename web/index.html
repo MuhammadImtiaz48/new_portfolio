@@ -18,18 +18,18 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Muhammad Imtiaz - Flutter App Developer with 2+ years of hands-on experience building production cross-platform mobile apps with Flutter, Firebase, REST APIs, and Payment Gateways.">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="portfolio">
+  <meta name="apple-mobile-web-app-title" content="Muhammad Imtiaz">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>portfolio</title>
+  <title>Muhammad Imtiaz | Flutter App Developer</title>
   <link rel="manifest" href="manifest.json">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -288,12 +288,24 @@
       statusEl.innerHTML = 'Ready<span class="loader-status-cursor">_</span>';
       setTimeout(function () {
         loaderEl.classList.add('loader-hidden');
-      }, 500);
+      }, 350);
     }
 
+    window.finishAppLoader = finishLoading;
     window.addEventListener('flutter-first-frame', finishLoading);
+    document.addEventListener('flutter-first-frame', finishLoading);
 
-    setTimeout(finishLoading, 7000);
+    try {
+      var observer = new MutationObserver(function() {
+        if (document.querySelector('flutter-view') || document.querySelector('flt-glass-pane')) {
+          observer.disconnect();
+          finishLoading();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    } catch (e) {}
+
+    setTimeout(finishLoading, 1800);
   })();
 </script>
 
